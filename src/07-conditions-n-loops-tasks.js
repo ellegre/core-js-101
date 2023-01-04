@@ -5,7 +5,8 @@
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration              *
  *                                                                                                *
  ************************************************************************************************ */
-
+/* eslint no-restricted-syntax:
+["error", "FunctionExpression", "WithStatement", "BinaryExpression[operator='in']"] */
 
 /**
  * Returns the 'Fizz','Buzz' or an original number using the following rules:
@@ -64,8 +65,8 @@ function getFactorial(n) {
  *   5,10  =>  45 ( = 5+6+7+8+9+10 )
  *   -1,1  =>  0  ( = -1 + 0 + 1 )
  */
-function getSumBetweenNumbers(/* n1, n2 */) {
-  throw new Error('Not implemented');
+function getSumBetweenNumbers(n1, n2) {
+  return ((n2 - n1) + 1) * ((n1 + n2) / 2);
 }
 
 
@@ -84,8 +85,8 @@ function getSumBetweenNumbers(/* n1, n2 */) {
  *   10,1,1   =>  false
  *   10,10,10 =>  true
  */
-function isTriangle(/* a, b, c */) {
-  throw new Error('Not implemented');
+function isTriangle(a, b, c) {
+  return a + b > c && b + c > a && c + a > b;
 }
 
 
@@ -168,8 +169,14 @@ function isInsideCircle(/* circle, point */) {
  *   'abracadabra'  => 'c'
  *   'entente' => null
  */
-function findFirstSingleChar(/* str */) {
-  throw new Error('Not implemented');
+function findFirstSingleChar(str) {
+  for (let i = 0; i < str.length; i += 1) {
+    const c = str.charAt(i);
+    if (str.indexOf(c) === i && str.indexOf(c, i + 1) === -1) {
+      return c;
+    }
+  }
+  return null;
 }
 
 
@@ -301,6 +308,21 @@ function getDigitalRoot(n) {
  */
 function isBracketsBalanced(/* str */) {
   throw new Error('Not implemented');
+  // const bracket = {
+  //   '(': ')',
+  //   '{': '}',
+  //   '[': ']',
+  // };
+  // const heap = [];
+  // for (const char of str) {
+  //   if (bracket[char]) {
+  //     heap.push(bracket[char]);
+  //   }
+  //   if (heap.pop() !== char) {
+  //     return false;
+  //   }
+  // }
+  // return (!heap.length);
 }
 
 
@@ -324,8 +346,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
