@@ -122,8 +122,11 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  return rect1.left + rect1.width > rect2.left
+    && rect2.left + rect2.width > rect1.left
+    && rect1.top + rect1.height > rect2.top
+    && rect2.top + rect2.height > rect1.top;
 }
 
 
@@ -153,8 +156,9 @@ function doRectanglesOverlap(/* rect1, rect2 */) {
  *   { center: { x:0, y:0 }, radius:10 },  { x:10, y:10 }   => false
  *
  */
-function isInsideCircle(/* circle, point */) {
-  throw new Error('Not implemented');
+function isInsideCircle(circle, point) {
+  return (point.x - circle.center.x) * (point.x - circle.center.x)
+   + (point.y - circle.center.y) * (point.y - circle.center.y) < circle.radius * circle.radius;
 }
 
 
@@ -202,8 +206,13 @@ function findFirstSingleChar(str) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  const arrSorted = [a, b].sort((c, d) => c - d);
+  const numSorted = arrSorted.join(', ');
+  if (isStartIncluded && isEndIncluded) return `[${numSorted}]`;
+  if (!isStartIncluded && !isEndIncluded) return `(${numSorted})`;
+  if (!isStartIncluded && isEndIncluded) return `(${numSorted}]`;
+  return `[${numSorted})`;
 }
 
 
@@ -263,6 +272,20 @@ function reverseInteger(num) {
  */
 function isCreditCardNumber(/* ccn */) {
   throw new Error('Not implemented');
+  // let numSum = 0;
+  // let value;
+  // for (let i = 0; i < 16; i + 1) {
+  //   if (i % 2 === 0) {
+  //     value = 2 * ccn[i];
+  //     if (value >= 10) {
+  //       value = (Math.floor(value / 10) + (value % 10));
+  //     }
+  //   } else {
+  //     value = +ccn[i];
+  //   }
+  //   numSum += value;
+  // }
+  // return (numSum % 10 === 0);
 }
 
 /**
@@ -306,23 +329,25 @@ function getDigitalRoot(n) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
-  // const bracket = {
-  //   '(': ')',
-  //   '{': '}',
-  //   '[': ']',
-  // };
-  // const heap = [];
-  // for (const char of str) {
-  //   if (bracket[char]) {
-  //     heap.push(bracket[char]);
-  //   }
-  //   if (heap.pop() !== char) {
-  //     return false;
-  //   }
-  // }
-  // return (!heap.length);
+function isBracketsBalanced(str) {
+  // throw new Error('Not implemented');
+  const hashMap = {
+    '(': ')',
+    '{': '}',
+    '[': ']',
+    '<': '>',
+  };
+  const stack = [];
+  for (const char of str) {
+    if (hashMap[char]) {
+      stack.push(hashMap[char]);
+    } else if (stack.length > 0 && stack[stack.length - 1] === char) {
+      stack.pop();
+    } else {
+      return false;
+    }
+  }
+  return stack.length === 0;
 }
 
 
@@ -363,8 +388,11 @@ function toNaryString(num, n) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const dirs = pathes.map((path) => path.split('/'));
+  const index = dirs[0].findIndex((x, i) => dirs.some((dir) => x !== dir[i]));
+  const path = dirs[0].slice(0, index).join('/');
+  return index === 0 ? '' : `${path}/`;
 }
 
 
@@ -386,8 +414,18 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = new Array(m1.length);
+  for (let i = 0; i < result.length; i += 1) {
+    result[i] = new Array(m2[i].length);
+    for (let j = 0; j < m1.length; j += 1) {
+      result[i][j] = 0;
+      for (let k = 0; k < m2.length; k += 1) {
+        result[i][j] += m1[i][k] * m2[k][j];
+      }
+    }
+  }
+  return result;
 }
 
 
