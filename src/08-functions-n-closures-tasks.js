@@ -149,8 +149,10 @@ function logger(/* func, logFunc */) {
  */
 function partialUsingArguments(/* fn, ...args1 */) {
   throw new Error('Not implemented');
+  // return function fn1(...args) {
+  //   return fn(...args, ...args1);
+  // };
 }
-
 
 /**
  * Returns the id generator function that returns next integer starting
