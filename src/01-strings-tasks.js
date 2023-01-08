@@ -203,8 +203,21 @@ function extractEmails(str) {
  *             '└──────────┘\n'
  *
  */
-function getRectangleString(/* width, height */) {
-  throw new Error('Not implemented');
+function getRectangleString(width, height) {
+  function arrayRows(subRow1, count) {
+    return new Array(count - 1).join(subRow1);
+  }
+  function subRow(char) {
+    return arrayRows(char, width);
+  }
+  function row(left, middle, right) {
+    const border = subRow(middle);
+    return `${left}${border}${right}\n`;
+  }
+  function center() {
+    return arrayRows(row('│', ' ', '│'), height);
+  }
+  return row('┌', '─', '┐') + center() + row('└', '─', '┘');
 }
 
 /**
