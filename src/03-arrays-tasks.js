@@ -438,10 +438,17 @@ function toStringList(arr) {
  *      { country: 'Russia',  city: 'Saint Petersburg' }
  *    ]
  */
-function sortCitiesArray(/* arr */) {
-  throw new Error('Not implemented');
+function sortCitiesArray(arr, compareKeys) {
+  let keys = compareKeys;
+  function getCompareValue(obj) {
+    return keys.map((x) => obj[x]).join('');
+  }
+  function citiesComparer(a, b) {
+    return getCompareValue(a).localeCompare(getCompareValue(b));
+  }
+  keys = keys || ['country', 'city'];
+  return arr.sort(citiesComparer);
 }
-
 /**
  * Creates an identity matrix of the specified size
  *
@@ -460,8 +467,12 @@ function sortCitiesArray(/* arr */) {
  *           [0,0,0,1,0],
  *           [0,0,0,0,1]]
  */
-function getIdentityMatrix(/* n */) {
-  throw new Error('Not implemented');
+function getIdentityMatrix(n) {
+  return Array.from({ length: n }, (x, i) => {
+    const arr = Array(n).fill(0);
+    arr[i] = 1;
+    return arr;
+  });
 }
 
 /**
