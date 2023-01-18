@@ -112,36 +112,126 @@ function fromJSON(proto, json) {
  *  For more examples see unit tests.
  */
 
+class Base {
+  constructor() {
+    this.selector = '';
+    this.flagElement = false;
+    this.flagId = false;
+    this.flagPseudoElement = false;
+    this.order = ['element', 'id', 'class', 'attr', 'pseudoClass', 'pseudoElement'];
+    this.maxOrder = -1;
+  }
+
+  checkOrder(type) {
+    if (this.order.indexOf(type) < this.maxOrder) {
+      throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    } else {
+      this.maxOrder = this.order.indexOf(type);
+    }
+  }
+
+
+  stringify() {
+    const result = this.selector;
+    this.selector = '';
+    return result;
+  }
+
+  element(value) {
+    this.checkOrder('element');
+    if (!this.flagElement) {
+      this.selector += value;
+      this.flagElement = true;
+    } else {
+      throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+    }
+    return this;
+  }
+
+  id(value) {
+    this.checkOrder('id');
+    if (!this.flagId) {
+      this.selector += `#${value}`;
+      this.flagId = true;
+    } else {
+      throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+    }
+    return this;
+  }
+
+  class(value) {
+    this.checkOrder('class');
+    this.selector += `.${value}`;
+    return this;
+  }
+
+  attr(value) {
+    this.checkOrder('attr');
+    this.selector += `[${value}]`;
+    return this;
+  }
+
+  pseudoClass(value) {
+    this.checkOrder('pseudoClass');
+    this.selector += `:${value}`;
+    return this;
+  }
+
+  pseudoElement(value) {
+    this.checkOrder('pseudoElement');
+    if (!this.flagPseudoElement) {
+      this.selector += `::${value}`;
+      this.flagPseudoElement = true;
+    } else {
+      throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+    }
+    return this;
+  }
+}
+
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  element(value) {
+    const b = new Base();
+    return b.element(value);
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    const b = new Base();
+    return b.id(value);
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    const b = new Base();
+    return b.class(value);
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    const b = new Base();
+    return b.attr(value);
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    const b = new Base();
+    return b.pseudoClass(value);
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    const b = new Base();
+    return b.pseudoElement(value);
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    const s1 = selector1.stringify();
+    const s2 = selector2.stringify();
+    this.selector = `${s1} ${combinator} ${s2}`;
+    return this;
+  },
+  stringify() {
+    const result = this.selector;
+    this.selector = '';
+    return result;
   },
 };
-
 
 module.exports = {
   Rectangle,

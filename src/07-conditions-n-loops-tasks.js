@@ -450,51 +450,47 @@ function getMatrixProduct(m1, m2) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const transposed = position.map((_, i) => position.map((row) => row[i]));
+  const straightMoves = () => [...position, ...transposed];
+  const isStraightWinner = (symbol) => straightMoves()
+    .some((moves) => moves.length === position.length
+      && moves.every((move) => move === symbol));
+
+  const diagonalMoves = () => {
+    const res = [];
+    const equalBasedDiagonal = [];
+    const sumBasedDiagonal = [];
+
+    for (let row = 0; row < position.length; row += 1) {
+      for (let col = 0; col < position.length; col += 1) {
+        if (row === col) {
+          equalBasedDiagonal.push(position[row][col]);
+        }
+      }
+    }
+
+    for (let row = 0; row < position.length; row += 1) {
+      for (let col = 0; col < position.length; col += 1) {
+        if (row + col === position.length - 1) {
+          sumBasedDiagonal.push(position[row][col]);
+        }
+      }
+    }
+
+    res.push(equalBasedDiagonal, sumBasedDiagonal);
+    return res;
+  };
+
+  const isDiagonalWinner = (symbol) => diagonalMoves()
+    .some((moves) => moves.every((move) => move === symbol));
+
+  const isWinner = (symbol) => isStraightWinner(symbol) || isDiagonalWinner(symbol);
+
+  if (isWinner('X')) return 'X';
+  if (isWinner('0')) return '0';
+  return undefined;
 }
-
-// function evaluateTicTacToePosition(position) {
-//   const transposed = position.map((_, i) => position.map((row) => row[i]));
-//   const straightMoves = () => [...position, ...transposed];
-//   const isStraightWinner = (symbol) => straightMoves()
-//     .some((moves) => moves.length === position.length
-//       && moves.every((move) => move === symbol));
-
-//   const diagonalMoves = () => {
-//     const res = [];
-//     const equalBasedDiagonal = [];
-//     const sumBasedDiagonal = [];
-
-//     for (let row = 0; row < position.length; row += 1) {
-//       for (let col = 0; col < position.length; col += 1) {
-//         if (row === col) {
-//           equalBasedDiagonal.push(position[row][col]);
-//         }
-//       }
-//     }
-
-//     for (let row = 0; row < position.length; row += 1) {
-//       for (let col = 0; col < position.length; col += 1) {
-//         if (row + col === position.length - 1) {
-//           sumBasedDiagonal.push(position[row][col]);
-//         }
-//       }
-//     }
-
-//     res.push(equalBasedDiagonal, sumBasedDiagonal);
-//     return res;
-//   };
-
-//   const isDiagonalWinner = (symbol) => diagonalMoves()
-//     .some((moves) => moves.every((move) => move === symbol));
-
-//   const isWinner = (symbol) => isStraightWinner(symbol) || isDiagonalWinner(symbol);
-
-//   if (isWinner('X')) return 'X';
-//   if (isWinner('0')) return '0';
-//   return undefined;
-// }
 
 
 module.exports = {
